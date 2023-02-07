@@ -14,3 +14,13 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+// início dos endpoints criados por mim
+
+const { readData } = require('./utils/fsUtils');
+
+app.get('/talker', async (req, res) => {
+  const data = await readData();
+  if (!data) return res.status(HTTP_OK_STATUS).json([]);
+  return res.status(HTTP_OK_STATUS).json(data);
+});
