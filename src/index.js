@@ -34,3 +34,10 @@ app.get('/talker/:id', async (req, res) => {
   if (!filterData) return res.status(NOT_FOUND).json(message);
   return res.status(HTTP_OK_STATUS).json(filterData);
 });
+
+const generateToken = require('./utils/generateToken');
+
+app.post('/login', async (req, res) => {
+  const token = generateToken();
+  res.status(HTTP_OK_STATUS).json({ token });
+});
