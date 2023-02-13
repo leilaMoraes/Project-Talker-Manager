@@ -36,8 +36,10 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 const generateToken = require('./utils/generateToken');
+const emailValidation = require('./middlewares/emailValidation');
+const passwordValidation = require('./middlewares/passwordValidation');
 
-app.post('/login', async (_req, res) => {
+app.post('/login', emailValidation, passwordValidation, (_req, res) => {
   const token = generateToken();
   res.status(HTTP_OK_STATUS).json({ token });
 });
