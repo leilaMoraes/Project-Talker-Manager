@@ -20,7 +20,7 @@ app.listen(PORT, () => {
 
 const { readData } = require('./utils/fsUtils');
 
-app.get('/talker', async (req, res) => {
+app.get('/talker', async (_req, res) => {
   const data = await readData();
   if (!data) return res.status(HTTP_OK_STATUS).json([]);
   return res.status(HTTP_OK_STATUS).json(data);
@@ -37,7 +37,7 @@ app.get('/talker/:id', async (req, res) => {
 
 const generateToken = require('./utils/generateToken');
 
-app.post('/login', async (req, res) => {
+app.post('/login', async (_req, res) => {
   const token = generateToken();
   res.status(HTTP_OK_STATUS).json({ token });
 });
