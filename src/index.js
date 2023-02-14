@@ -5,6 +5,7 @@ app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const CREATED = 201;
+const NO_RESPONSE = 204;
 const NOT_FOUND = 404;
 const PORT = '3000';
 
@@ -72,4 +73,13 @@ ageValidation, talkValidation, watchedAtValidation, rateValidation, async (req, 
   data[index] = { id: Number(id), ...editedTalker };
   await writeData(data);
   return res.status(HTTP_OK_STATUS).json(data[index]);
+});
+
+app.delete('/talker/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+  const data = await readData();
+  const newData = data.filter((talker) => talker.id !== Number(id));
+  await writeData(newData);
+
+  return res.status(NO_RESPONSE).json();
 });
