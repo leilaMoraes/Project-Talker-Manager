@@ -48,7 +48,7 @@ const rateValidation = require('./middlewares/rateValidation');
 
 app.post('/login', emailValidation, passwordValidation, (_req, res) => {
   const token = generateToken();
-  res.status(HTTP_OK_STATUS).json({ token });
+  return res.status(HTTP_OK_STATUS).json({ token });
 });
 
 app.post('/talker', tokenValidation, nameValidation,
@@ -60,5 +60,16 @@ ageValidation, talkValidation, watchedAtValidation, rateValidation, async (req, 
   };
   data.push(newTalker);
   await writeData(data);
-  res.status(CREATED).json(newTalker);
+  return res.status(CREATED).json(newTalker);
+});
+
+app.put('/talker/:id', tokenValidation, nameValidation,
+ageValidation, talkValidation, watchedAtValidation, rateValidation, async (req, res) => {
+  const data = await readData();
+  const { id } = req.params;
+  const editedTalker = req.body;
+  const index = data.findIndex((talker) => talker.id === Number(id));
+  data[index] = { id: Number(id), ...editedTalker };
+  await writeData(data);
+  return res.status(HTTP_OK_STATUS).json(data[index]);
 });
