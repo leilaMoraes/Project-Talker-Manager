@@ -5,7 +5,7 @@ function validateTalk(req, res, next) {
     if (!talk) {
       return res.status(ERROR_MESSAGE).json({ message: 'O campo "talk" é obrigatório' });
     }
-    next();
+    return next();
 }
   
   module.exports = validateTalk;
