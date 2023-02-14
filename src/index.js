@@ -4,6 +4,7 @@ const app = express();
 app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
+const CREATED = 201;
 const NOT_FOUND = 404;
 const PORT = '3000';
 
@@ -18,7 +19,7 @@ app.listen(PORT, () => {
 
 // início dos endpoints criados por mim
 
-const { readData } = require('./utils/fsUtils');
+const { readData, writeData } = require('./utils/fsUtils');
 
 app.get('/talker', async (_req, res) => {
   const data = await readData();
@@ -38,8 +39,26 @@ app.get('/talker/:id', async (req, res) => {
 const generateToken = require('./utils/generateToken');
 const emailValidation = require('./middlewares/emailValidation');
 const passwordValidation = require('./middlewares/passwordValidation');
+const tokenValidation = require('./middlewares/tokenValidation');
+const nameValidation = require('./middlewares/nameValidation');
+const ageValidation = require('./middlewares/ageValidation');
+const talkValidation = require('./middlewares/talkValidation');
+const watchedAtValidation = require('./middlewares/watchedAtValidation');
+const rateValidation = require('./middlewares/rateValidation');
 
 app.post('/login', emailValidation, passwordValidation, (_req, res) => {
   const token = generateToken();
   res.status(HTTP_OK_STATUS).json({ token });
+});
+
+app.post('/talker', tokenValidation, nameValidation,
+ageValidation, talkValidation, watchedAtValidation, rateValidation, async (req, res) => {
+  const data = await readData();
+  const newTalker = {
+    id: data.length + 1,
+    ...req.body,
+  };
+  data.push(newTalker);
+  await writeData(data);
+  res.status(CREATED).json(newTalker);
 });
