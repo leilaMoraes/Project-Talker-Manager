@@ -3,7 +3,7 @@ function rateValidation(req, res, next) {
     const { rate } = talk;
     const ERROR_MESSAGE = 400;
 
-    if (!rate) {
+    if (rate === undefined) {
         return res.status(ERROR_MESSAGE).json({ message: 'O campo "rate" é obrigatório' }); 
     }
     if (rate % 1 !== 0 || rate < 1 || rate > 5) {
